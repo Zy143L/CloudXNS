@@ -1,0 +1,7 @@
+config shizuku "shizuku"
+	option API_KEY  ''
+	option SECRET_KEY ''
+	option main_domain ''
+	option sub_domain ''
+        option xns ''
+        option ipv6 ''

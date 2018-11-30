@@ -42,10 +42,18 @@ fi
 
 if [ "${IPv4_6}" == "0" ];then
 	IP=`curl -s http://members.3322.org/dyndns/getip`
+	if [ "$IP" == "" ];then
+	printMsg "IP获取失败 请检查网络连接"
+	exit
+	fi
 	elif [ "${IPv4_6}" == "1" ];then
 		IP6=`ifconfig | awk '/Global/{print $3}' | awk -F/ '{print $1}' | sed -n '1p;1q'`
 			elif [ "${IPv4_6}" == "2" ];then
 				IP=`curl -s http://members.3322.org/dyndns/getip`
+					if [ "$IP" == "" ];then
+	printMsg "IP获取失败 请检查网络连接"
+	exit
+	fi
 				IP6=`ifconfig | awk '/Global/{print $3}' | awk -F/ '{print $1}' | sed -n '1p;1q'`
 else
 exit
@@ -116,7 +124,7 @@ fi
 		URL_U="https://www.cloudxns.net/api2/record/${RECORD_ID}"
 		PARAM_BODY="{\"domain_id\":\"${DOMAIN_ID}\",\"host\":\"${HOST}\",\"value\":\"${IP}\"}"
 		HMAC_U=`printf "%s" "${API_KEY}${URL_U}${PARAM_BODY}${DATE}${SECRET_KEY}"|md5sum|cut -d" " -f1`
-		RESULT=`curl -k -s "${URL_U}" -X PUT -d "${PARAM_BODY}" -H "API-KEY: ${API_KEY}" -h "API-REQUEST-DATE: ${DATE}" -H "API-HMAC: ${HMAC_U}" -H 'Content-Type: application/json'`
+		RESULT=`curl -k -s "${URL_U}" -X PUT -d "${PARAM_BODY}" -H "API-KEY: ${API_KEY}" -H "API-REQUEST-DATE: ${DATE}" -H "API-HMAC: ${HMAC_U}" -H 'Content-Type: application/json'`
 		printMsg "$RESULT"
 		elif [ "$IPv4_6" == "1" ] ;then
 		printMsg "CloudXNS动态域名 IPv6模式 更新域名 ${HOST}.${DOMAIN} 记录IP $IP6"
